@@ -26,7 +26,6 @@ In the future, Envv may (or may not) work in the browser. Currently, it's being 
 
 ...
 
-###
 data{-prefix}-environment       # development is a special value, everything else is up to you
 data{-prefix}-runtime           # does the replacement if env is anything other than development
 data{-prefix}-cdn               # similar to runtime, but you don't have to specify a full URL, 
@@ -72,4 +71,11 @@ See [the semver website](http://semver.org/) for more information about how sema
 
 By default, Envv will search https://ajax.googleapis.com/ajax/libs and http://cdnjs.cloudflare.com/ajax/libs. You can change where Envv looks with the `--networks` parameter on the commandline, or the networks argument to cdn.find in the API.
 
-Whenever Envv first encounters a particular semver reference or an incompletely specified reference, it will query public CDNs to see whether they have what you're looking for. But a minority of projects use unexpected filenames and Envv can't find those. For example labjs is available as `LAB.min.js` on the 
+Whenever Envv first encounters a particular semver reference or an incompletely specified reference, it will query public CDNs to see whether they have what you're looking for. But a minority of projects use unexpected filenames and Envv can't find those. For example labjs is available as `LAB.min.js` on the CloudFlare CDN. You can provide Envv with a hint as to where to find things.
+
+In the API:
+
+Or through the command-line
+
+    --hint labjs@2.0.3:http://cdnjs.cloudflare.com/ajax/libs/labjs/2.0.3/LAB.min.js
+    --hint privatelib@0.3.0rc:http://static.example.org/libs/dev/privatelib.min.js
