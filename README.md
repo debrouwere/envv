@@ -75,6 +75,15 @@ Whenever Envv first encounters a particular semver reference or an incompletely 
 
 In the API:
 
+    should = require('should');
+    envv = require('envv');
+    var q = new envv.cdn.Query();
+
+    q.hint({'obscurelib@0.6.5': 'http://example.org/obscurity.js'});
+    q.find('obscurelib@0.6.5', function (locations) {
+        locations.length.should.equal(1);
+    });
+
 Or through the command-line
 
     --hint labjs@2.0.3:http://cdnjs.cloudflare.com/ajax/libs/labjs/2.0.3/LAB.min.js

@@ -13,7 +13,7 @@ it 'should accept both paths and pinned versions and resolve them accordingly', 
     refs[0].should.equal 'https://ajax.googleapis.com/ajax/libs/underscore.js/1.7.1/underscore.min.js'
 
 it 'should accept hints when guessing does not work', (done) ->
-    q.hint {'obscurelib@0.6.5': 'http://example.org/obscuritas.js'}
+    q.hint {'obscurelib@0.6.5': 'http://example.org/obscurity.js'}
     q.find 'obscurelib@0.6.5', (locations) ->
         locations.length.should.equal 1
         should.exist q.cache.libraries['obscurelib@0.6.5']
