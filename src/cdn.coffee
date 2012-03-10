@@ -79,6 +79,23 @@ class exports.Query
 
         return references
 
+    resolvePathReference: (path) ->
+        segments = path.split('/')
+        if segments.length < 3
+            throw new Error "Can't resolve #{path} into a Semver reference"
+
+        [base..., script, version, filename] = segments
+        semver = "#{script}@#{version}"
+        @resolveSemverReference semver
+
+    resolveReference: (reference) ->
+        if (reference.indexOf '/') isnt -1
+            @resolvePathReference reference
+        else if (reference.indexOf '@') isnt -1
+            @resolveSemverReference reference
+        else
+            new Error "This reference is not a path or a semver reference, and can't be resolved"
+
     hint: (hints) ->
         (@cache.add reference, uri) for reference, uri of hints
         @cache.save()
@@ -88,8 +105,8 @@ class exports.Query
         if cache
             callback cache
             return
-    
-        async.filter (@resolveSemverReference reference, @networks), has_file, (locations) =>
+
+        async.filter (@resolveReference reference, @networks), has_file, (locations) =>
             if locations.length > 0
                 # update cache
                 (@cache.add reference, location) for location in locations

@@ -1,11 +1,13 @@
 Envv allows you to change how your client-side code works depending on whether it's in a development or production environment. The same concept you love from server-side coding, except now you can use it in your front-end projects.
 
-    <link rel='stylesheet' href='grid-debug.css' data-environment='development' /> 
+In the future, Envv may (or may not) work in the browser. Currently, it's being implemented as an HTML preprocessor.
+
+    <link rel="stylesheet" href="grid-debug.css" data-environment="development" /> 
     <script
-        src='jquery.js'
-        data-cdn='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'>
+        src="jquery.js"
+        data-cdn="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
     </script>
-    <script data-environment='production'>
+    <script data-environment="production">
         (function() {
         var ga = document.createElement('script');
         ga.src = ('https:' == document.location.protocol ?

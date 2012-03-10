@@ -1,23 +1,32 @@
-###
-q = new exports.Query()
-q.find 'jquery@1.7.1', (location) ->
-    console.log location
-    console.log q.cache.libraries
+should = require 'should'
+cdn = require '../src/cdn'
 
-q.hint {'obscurelib@0.6.5': 'http://example.org/obscuritas.js'}
-q.find 'obscurelib@0.6.5', (location) ->
-    console.log location
-    console.log q.cache.libraries
+q = new cdn.Query()
 
-console.log q.resolveSemverReference 'jquery@1.7.1'
-q.find 'jquery@1.7.1', (location) ->
-    console.log location
+it 'should be able to convert pinned versions into potential CDN paths', ->
+    refs = q.resolveSemverReference('jquery@1.7.1')
+    refs.length.should.equal 4
+    refs[0].should.equal 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'
 
-console.log q.resolveSemverReference 'underscore.js@1.7.1'
-q.find 'underscore.js@1.3.1', (location) ->
-    console.log location
+it 'should accept both paths and pinned versions and resolve them accordingly', ->
+    refs = q.resolveReference '/vendor/underscore.js/1.7.1/underscore-min.js'
+    refs[0].should.equal 'https://ajax.googleapis.com/ajax/libs/underscore.js/1.7.1/underscore.min.js'
 
-console.log q.resolveSemverReference 'spinejs@0.0.4'
-q.find 'spinejs@0.0.4', (location) ->
-    console.log location
-###
+it 'should accept hints when guessing does not work', (done) ->
+    q.hint {'obscurelib@0.6.5': 'http://example.org/obscuritas.js'}
+    q.find 'obscurelib@0.6.5', (locations) ->
+        locations.length.should.equal 1
+        should.exist q.cache.libraries['obscurelib@0.6.5']
+        done()
+
+it 'should handle `js` suffixes intelligently when guessing a library its location', ->
+    refs = q.resolveReference 'spinejs@0.0.4'
+    refs[0].should.equal 'https://ajax.googleapis.com/ajax/libs/spinejs/0.0.4/spine.min.js'
+    refs = q.resolveReference 'underscore.js@a.b.c'
+    refs[0].should.equal 'https://ajax.googleapis.com/ajax/libs/underscore.js/a.b.c/underscore.min.js'
+
+it 'should test potential CDN paths to see which ones work if there is no cache', (done) ->
+    q.cache.clean()
+    q.find 'jquery@1.7.1', (locations) ->
+        locations.length.should.be.above 0
+        done()
