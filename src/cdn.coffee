@@ -59,7 +59,7 @@ class exports.Cache
             return null
 
 class exports.Query
-    constructor: (@networks = NETWORKS, hints = {}, cachepath = '../cache.json') ->
+    constructor: (@networks = NETWORKS, hints = {}, cachepath = '../cache/cache.json') ->
         @cache = new exports.Cache cachepath
         (@cache.add reference, uri) for reference, uri of hints
         @cache.save()

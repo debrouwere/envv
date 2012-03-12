@@ -18,6 +18,8 @@ In the future, Envv may (or may not) work in the browser. Currently, it's being 
         })();
     </script>
 
+**Note:** whenever you add a new external library and specify a `data-cdn` without a full URL (e.g. using a pinned version like `jquery@1.7.1`), Envv needs an internet connection to actually make sure that the thing you need is available on a public content delivery network. Envv will keep this information cached, so it's a one-time thing, but keep it in mind.
+
 ## API
 
 ...

@@ -1,0 +1,22 @@
+{
+  "author": "Stijn Debrouwere <stijn@stdout.be> (http://stdout.be)",
+  "name": "envv",
+  "description": "Environments for client-side code: execute or skip code depending on whether you're deploying to a production server or just developing.",
+  "version": "0.1.0",
+  "repository": {
+    "url": ""
+  },
+  "main": "lib/index.js",
+  "engines": {
+    "node": "~0.6.10"
+  },
+  "dependencies": {
+    "jsdom": "",
+    "async": "",
+    "request": ""
+  },
+  "devDependencies": {
+    "mocha": ""
+  },
+  "optionalDependencies": {}
+}
