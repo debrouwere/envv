@@ -28,7 +28,7 @@ class exports.Cache
         fs.writeFileSync @path, json, 'utf8'
         this
 
-    clean: ->
+    clear: ->
         @libraries = {}
         this
 
