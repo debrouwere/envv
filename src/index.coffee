@@ -63,6 +63,8 @@ class Page
                 window.close()
                 callback errors
 
+            # TODO: think about whether this is the expected behavior, 
+            # and if so, whether it should apply to runtimes too (probably)
             return close() if environment is 'development'
 
             # preprocess CDN references
