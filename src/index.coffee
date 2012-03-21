@@ -13,7 +13,7 @@ processReference = _.bind cdnQuery.find, cdnQuery
 # TODO: check whether we're dealing with a directory or an individual file
 
 class Page
-    constructor: (@uri, @environment) ->
+    constructor: (@uri, @environment, @prefix = '') ->
 
     # getter/setter
     html: (window) ->
@@ -24,7 +24,13 @@ class Page
 
     # TODO: refactor / split this up a bit
     process: (callback) ->
-        environment = @environment
+        {environment, prefix} = @
+        if prefix.length then prefix += '-'
+        prefixed = (str) ->
+            prefix + str
+
+        data = (str) ->
+            'data-' + prefixed str
     
         jsdom.env @uri, [jquery], (errors, window) =>
             $ = window.$
@@ -32,8 +38,8 @@ class Page
             # process environments      
             $("*").each ->
                 el = $ @
-                environments = el.data('environment') or el.data('environment-block')
-                isBlock = el.data('environment-block').length isnt 0
+                environments = el.data(prefixed 'environment') or el.data(prefixed 'environment-block')
+                isBlock = el.data(prefixed 'environment-block').length isnt 0
                 return unless environments.length
 
                 environments = environments.split(' ')
@@ -42,16 +48,16 @@ class Page
                     if isBlock
                         el.replaceWith el.children()
                     else
-                        el.removeAttr 'data-environment'
+                        el.removeAttr data 'environment'
                 else
                     el.remove()
                     
             # process runtimes
             $("script").add("link").each ->
                 el = $ @
-                runtime = el.data('runtime')
+                runtime = el.data(prefixed 'runtime')
                 return unless runtime.length
-                el.removeAttr 'data-runtime'
+                el.removeAttr data 'runtime'
                 if el.is('link')
                     el.attr 'href', runtime
                 else
@@ -70,21 +76,21 @@ class Page
             # preprocess CDN references
             links = $("script").add("link")
                 .filter ->
-                    $(this).data('cdn').length isnt 0     
+                    $(this).data(prefixed 'cdn').length isnt 0     
                 .each ->
                     # data-cdn="data-cdn" simply means `true`, so we use the 
                     # script or link source instead to figure out what to replace
                     # this element with
                     el = $ @
-                    reference = el.data('cdn')
+                    reference = el.data(prefixed 'cdn')
                     source = el.attr('src') or el.attr('href')
-                    if reference is 'data-cdn' then reference = source
-                    el.data 'cdn', reference            
+                    if reference is ('data-' + prefixed 'cdn') then reference = source
+                    el.data (prefixed 'cdn'), reference            
 
             # process CDN references
             process = (link, done) ->
                 el = $(link)
-                reference = el.data 'cdn'
+                reference = el.data prefixed 'cdn'
                 processReference reference, (errors, locations) ->
                     return done() unless locations.length
 
@@ -92,14 +98,14 @@ class Page
                         el.attr 'href', locations[0]
                     else
                         el.attr 'src', locations[0]
-                    el.removeAttr 'data-cdn'
+                    el.removeAttr data 'cdn'
                     
                     done()
             
             async.forEach links.get(), process, close
 
-exports.transform = (uri, environment, callback) ->
-    page = new Page uri, environment
+exports.transform = (params..., callback) ->
+    page = new Page params...
     tasks = [
         page.process
         ]
