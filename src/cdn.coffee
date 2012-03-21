@@ -101,7 +101,8 @@ class exports.Query
         @cache.save()
 
     find: (reference, callback) ->
-        cache = @cache.find @toSemver reference
+        reference = @toSemver reference
+        cache = @cache.find reference
         if cache
             callback null, cache
             return
