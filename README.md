@@ -94,12 +94,16 @@ data{-prefix}-cdn               # similar to runtime, but you don't have to spec
 
 There are three different ways you can use data-cdn, to suit different requirements.
 
-1. No specification, just <script src="/myproject/vendor/underscore/1.3.1/underscore-min.js" data-cdn></script>
+#### No specification
+
+No specification means you just do `<script src="/myproject/vendor/underscore/1.3.1/underscore-min.js" data-cdn></script>`
 
 Your vendor dir during development follows the common CDN directory layout, 
 
     <script>/<version>/<script-without-suffix>.min.js
+
 or
+
     <script>/<version>/<script-without-suffix>-min.js
 
 "Without suffix" means that `backbone.js` becomes `backbone`, and `datejs` becomes `date`. So your backbone.js file should reside at `/backbone.js/0.9.1/backbone-min.js`
@@ -108,13 +112,13 @@ Any base directory works, so for example /myproject/vendor/underscore/1.3.0/unde
 
 This option is especially useful when you're using [Draughtsman]() or the [Mimeo]() local mirror during development, as those tools will make popular JavaScript scripts available at exactly those paths.
 
-2. Full specification
+#### Full specification
 
 You can specify a full URL. This is equivalent to `data-runtime`.
 
     <script src="underscore.min.js" data-cdn="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.1/underscore-min.js"></script>
 
-3. Semver specification
+#### Semver specification
 
 You can specify a project and its version number, and Envv will try to find that project in a public CDN.
 
