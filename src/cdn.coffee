@@ -46,13 +46,7 @@ class exports.Cache
             if library of @libraries
                 delete @libraries[library]
 
-    find: (path_or_specification) ->
-        if (path_or_specification.indexOf '/') isnt -1
-            # TODO: properly implement
-            specification = convert_to_spec path_or_specification
-        else
-            specification = path_or_specification
-
+    find: (specification) ->
         if @libraries[specification]?
             return @libraries[specification]
         else
@@ -79,13 +73,19 @@ class exports.Query
 
         return references
 
-    resolvePathReference: (path) ->
-        segments = path.split('/')
-        if segments.length < 3
-            throw new Error "Can't resolve #{path} into a Semver reference"
+    toSemver: (path) ->
+        if path.indexOf('@') isnt -1
+            path
+        else
+            segments = path.split('/')
+            if segments.length < 3
+                throw new Error "Can't resolve #{path} into a Semver reference"
 
-        [base..., script, version, filename] = segments
-        semver = "#{script}@#{version}"
+            [base..., script, version, filename] = segments
+            "#{script}@#{version}"            
+
+    resolvePathReference: (path) ->
+        semver = @toSemver path
         @resolveSemverReference semver
 
     resolveReference: (reference) ->
@@ -101,9 +101,9 @@ class exports.Query
         @cache.save()
 
     find: (reference, callback) ->
-        cache = @cache.find reference
+        cache = @cache.find @toSemver reference
         if cache
-            callback cache
+            callback null, cache
             return
 
         async.filter (@resolveReference reference, @networks), has_file, (locations) =>
@@ -113,4 +113,4 @@ class exports.Query
                 @cache.save()
             
             # call back with what we've found
-            callback locations
+            callback null, locations

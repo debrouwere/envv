@@ -29,6 +29,7 @@ In the future, Envv may (or may not) work in the browser. Currently, it's being 
 ...
 
 data{-prefix}-environment       # development is a special value, everything else is up to you
+data{-prefix}-environment-block # specify this when you want to consume the tag the environment is attached to
 data{-prefix}-runtime           # does the replacement if env is anything other than development
 data{-prefix}-cdn               # similar to runtime, but you don't have to specify a full URL, 
                                 # but instead you can do e.g. data-cdn="jquery@1.7.2"

@@ -14,7 +14,7 @@ it 'should accept both paths and pinned versions and resolve them accordingly', 
 
 it 'should accept hints when guessing does not work', (done) ->
     q.hint {'obscurelib@0.6.5': 'http://example.org/obscurity.js'}
-    q.find 'obscurelib@0.6.5', (locations) ->
+    q.find 'obscurelib@0.6.5', (errors, locations) ->
         locations.length.should.equal 1
         should.exist q.cache.libraries['obscurelib@0.6.5']
         done()
@@ -27,6 +27,6 @@ it 'should handle `js` suffixes intelligently when guessing a library its locati
 
 it 'should test potential CDN paths to see which ones work if there is no cache', (done) ->
     q.cache.clean()
-    q.find 'jquery@1.7.1', (locations) ->
+    q.find 'jquery@1.7.1', (errors, locations) ->
         locations.length.should.be.above 0
         done()

@@ -16,7 +16,10 @@
     "request": ""
   },
   "devDependencies": {
-    "mocha": ""
+    "mocha": "0.14.x"
   },
-  "optionalDependencies": {}
+  "optionalDependencies": {},
+  "scripts": {
+    "install": "make"
+  }
 }
