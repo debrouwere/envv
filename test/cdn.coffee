@@ -26,7 +26,7 @@ it 'should handle `js` suffixes intelligently when guessing a library its locati
     refs[0].should.equal 'https://ajax.googleapis.com/ajax/libs/underscore.js/a.b.c/underscore.min.js'
 
 it 'should test potential CDN paths to see which ones work if there is no cache', (done) ->
-    q.cache.clean()
+    q.cache.clear()
     q.find 'jquery@1.7.1', (errors, locations) ->
         locations.length.should.be.above 0
         done()
