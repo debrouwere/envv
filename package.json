@@ -11,6 +11,7 @@
     "node": "~0.6.10"
   },
   "dependencies": {
+    "coffee-script": "1.x",
     "async": "0.1.x",
     "commander": "0.5.x",
     "jsdom": "0.2.x",
