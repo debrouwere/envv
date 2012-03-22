@@ -1,0 +1,62 @@
+#!/usr/bin/env coffee
+
+fs = require 'fs'
+fs.path = require 'path'
+program = require 'commander'
+async = require 'async'
+envv = require '../lib/index'
+
+program
+    .usage '[options] <file>'
+program    
+    .option '-e, --environment [name]',
+        'the environment you want the output to adhere to [production]', 'production'
+    .option '-p, --prefix [name]', 
+        'the namespace prefix you use on your data attributes, if any'
+    .option '-h, --hint [pairs]',
+        'provide hints to the CDN probe about where to find obscure or badly named libraries', ''
+    .option '-o, --output',
+        'the directory to which you want to write output (stdout if unspecified, the environment name if left blank)'
+    .parse process.argv
+
+here = (segments...) ->
+    fs.path.join __dirname, '..', segments...
+
+hints = {}
+program.hint.split(',').forEach (hint) ->
+    [library, location] = hint.split(':')
+    hints[library] = location
+
+# the CLI can deal with both files and directories
+# TODO: consider moving this into envv.transform itself
+src = program.args[0]
+if typeof program.output is 'string'
+    dest = program.output
+    
+else
+    dest = program.environment
+
+root = fs.statSync src
+if root.isFile()
+    src = [src]
+else
+    src = fs.readdirSync src
+
+src = src.map (file) -> here file
+
+async.forEach src, (file, done) ->
+    return done() if (fs.path.extname file) isnt '.html'
+
+    envv.transform file, program.environment, program.prefix, hints, (errors, output) ->
+        name = fs.path.basename file
+        fileDest = here dest, name
+
+        console.log here dest
+        console.log fs.path.existsSync here dest
+    
+        if program.output?
+            if not (fs.path.existsSync here dest) then fs.mkdirSync here dest
+            fs.writeFile fileDest, output, done
+        else
+            process.stdout.write output
+            done()

@@ -13,7 +13,8 @@ processReference = _.bind cdnQuery.find, cdnQuery
 # TODO: check whether we're dealing with a directory or an individual file
 
 class Page
-    constructor: (@uri, @environment, @prefix = '') ->
+    constructor: (@uri, @environment, @prefix = '', hints = {}) ->
+        cdnQuery.hint hints
 
     # getter/setter
     html: (window) ->

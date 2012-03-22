@@ -30,6 +30,40 @@ In the future, Envv may (or may not) work in the browser. Currently, Envv is imp
         })();
     </script>
 
+## Usage
+
+Environment-specific functionality or html is indicated using data attributes.
+
+    data{-prefix}-environment       # development is a special value, everything else is up to you
+    data{-prefix}-environment-block # specify this when you want to consume the tag the environment is attached to
+    data{-prefix}-runtime           # does the replacement if env is anything other than development
+    data{-prefix}-cdn               # similar to runtime, but you don't have to specify a full URL, 
+                                    # but instead you can do e.g. data-cdn="jquery@1.7.2"
+                                    # and it will check the two major public CDN's
+                                    # (Google and CloudFlare)
+                                    # (though if you pass a full URL, it'll act like a more semantic
+                                    # version of data-runtime instead)
+
+By default, Envv will search for attributes like `data-environment`, `data-cdn` and so on, but if you prefer, you can add whatever namespace prefix you like. Just make sure to specify your prefix (if any) on the command-line or when using the API, so envv knows you're using one.
+
+You can specify multiple environments in an environment attribute. For example, if you want to leave debugging on in your staging environment, you could do something like
+
+    <script data-environment="development staging">
+        var MyApp.debug = true;
+    </script>
+
+`data-cdn` is very versatile: you can specify a path (e.g. `https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js`, a pinned version (e.g. `jquery@1.7.1`) or you can leave it blank (e.g. `<script src="/libs/jquery/1.7.1/jquery.min.js" data-cdn></script>`) in which case Envv will try to divine the library you want to "cdnify" from the path to your local version in `src`.
+
+Scroll down to the "advanced usage" section to learn more.
+
+## CLI
+
+Envv is accessible through the command-line. For example: 
+
+    envv test/examples/basic/index.html -e development
+
+To find out more, do `envv --help`
+
 ## API
 
 Transform your HTML to conform to an environment: 
@@ -80,20 +114,6 @@ Find the location of popular JavaScript libraries on Google and CloudFlare's pub
 
 You can also take a look at the unit and integration tests in the `envv/test` directory to get a better feel for the API.
 
-## CLI
-
-The CLI is still being built, but here's what it will look like.
-
-data{-prefix}-environment       # development is a special value, everything else is up to you
-data{-prefix}-environment-block # specify this when you want to consume the tag the environment is attached to
-data{-prefix}-runtime           # does the replacement if env is anything other than development
-data{-prefix}-cdn               # similar to runtime, but you don't have to specify a full URL, 
-                                # but instead you can do e.g. data-cdn="jquery@1.7.2"
-                                # and it will check the two major public CDN's
-                                # (Google and CloudFlare)
-                                # (though if you pass a full URL, it'll act like a more semantic
-                                # version of data-runtime instead)
-
 ## Advanced use
 
 ### Using data-cdn
@@ -124,7 +144,7 @@ You can specify a full URL. This is equivalent to `data-runtime`.
 
     <script src="underscore.min.js" data-cdn="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.1/underscore-min.js"></script>
 
-#### Semver specification
+#### Pinned version
 
 You can specify a project and its version number, and Envv will try to find that project in a public CDN.
 
@@ -155,8 +175,10 @@ Whenever Envv first encounters a particular semver reference or an incompletely 
 
 Or through the command-line
 
-    --hint labjs@2.0.3:http://cdnjs.cloudflare.com/ajax/libs/labjs/2.0.3/LAB.min.js
-    --hint privatelib@0.3.0rc:http://static.example.org/libs/dev/privatelib.min.js
+    envv --hint labjs@2.0.3:http://cdnjs.cloudflare.com/ajax/libs/labjs/2.0.3/LAB.min.js
+    envv --hint privatelib@0.3.0rc:http://static.example.org/libs/dev/privatelib.min.js
+
+You can use as many hints as you like: just separate key-value pairs with a comma.
 
 ### How the cache works
 
