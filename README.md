@@ -1,8 +1,14 @@
+# Envv
+
+[![Build Status](https://secure.travis-ci.org/stdbrouw/envv.png)](http://travis-ci.org/stdbrouw/envv)
+
 Envv allows you to change how your client-side code works depending on whether it's in a development or production environment. The same concept you love from server-side coding, except now you can use it in your front-end projects.
 
 Envv also makes it easy to use public CDNs to host popular JavaScript libraries in production.
 
 In the future, Envv may (or may not) work in the browser. Currently, Envv is implemented as an HTML preprocessor in node.js, accessible programmatically and through a command-line interface.
+
+## Example
 
     <link rel="stylesheet" href="grid-debug.css" data-environment="development" /> 
     <script
