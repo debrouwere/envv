@@ -2,13 +2,14 @@ fs = require 'fs'
 fs.path = require 'path'
 async = require 'async'
 request = require 'request'
+_ = require 'underscore'
 
 NETWORKS = [
     'https://ajax.googleapis.com/ajax/libs'
     'http://cdnjs.cloudflare.com/ajax/libs'
     ]
 
-has_file = (location, callback) ->
+hasFile = (location, callback) ->
     request.head location, (error, response, body) ->
         callback response.statusCode is 200
 
@@ -107,7 +108,10 @@ class exports.Query
             callback null, cache
             return
 
-        async.filter (@resolveReference reference, @networks), has_file, (locations) =>
+        # don't spam the public CDNs we query
+        niceHasFile = _.debounce hasFile, 250
+
+        async.filter (@resolveReference reference, @networks), hasFile, (locations) =>
             if locations.length > 0
                 # update cache
                 (@cache.add reference, location) for location in locations
