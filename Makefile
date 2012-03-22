@@ -6,4 +6,4 @@ clean:
 	rm -rf cache
 
 test: all
-	./node_modules/.bin/mocha --reporter list
+	mocha --reporter list --timeout 30000
