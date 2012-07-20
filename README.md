@@ -73,7 +73,8 @@ Transform your HTML to conform to an environment:
     fs.path = require 'path'
     envv = require 'envv'
     here = (path) -> fs.path.join __dirname, path
-    
+
+    # can be a URL or a string of HTML
     app = here 'index.html'
     envv.transform app, 'production', (errors, html) ->
         fs.writeFileSync (here 'index-production.html'), html

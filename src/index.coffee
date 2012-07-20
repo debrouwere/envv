@@ -1,4 +1,4 @@
-cdn = require './cdn'
+cdn = exports.cdn = require './cdn'
 jsdom = require 'jsdom'
 fs = require 'fs'
 fs.path = require 'path'
