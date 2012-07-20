@@ -3,6 +3,7 @@ fs.path = require 'path'
 async = require 'async'
 request = require 'request'
 _ = require 'underscore'
+mkdirp = require 'mkdirp'
 
 NETWORKS = [
     'https://ajax.googleapis.com/ajax/libs'
@@ -16,6 +17,8 @@ hasFile = (location, callback) ->
 class exports.Cache
     constructor: (path) ->
         @path = fs.path.join __dirname, path
+        base = fs.path.dirname @path
+        mkdirp.sync base
         @libraries = {}
         if fs.path.existsSync @path then @load()
 

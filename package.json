@@ -2,7 +2,7 @@
   "author": "Stijn Debrouwere <stijn@stdout.be> (http://stdout.be)",
   "name": "envv",
   "description": "Environments for client-side code: execute or skip code depending on whether you're deploying to a production server or just developing.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "repository": {
     "url": "git@github.com:stdbrouw/envv.git"
   },
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "coffee-script": "1.x",
+    "mkdirp": "0.3.x",
     "async": "0.1.x",
     "commander": "0.5.x",
     "jsdom": "0.2.x",
