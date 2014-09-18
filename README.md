@@ -1,12 +1,22 @@
 # Envv
 
-[![Build Status](https://secure.travis-ci.org/stdbrouw/envv.png)](http://travis-ci.org/stdbrouw/envv)
-
 Envv allows you to change how your client-side code works depending on whether it's in a development or production environment. The same concept you love from server-side coding, except now you can use it in your front-end projects.
 
 Envv also makes it easy to use public CDNs to host popular JavaScript libraries in production.
 
-In the future, Envv may (or may not) work in the browser. Currently, Envv is implemented as an HTML preprocessor in node.js, accessible programmatically and through a command-line interface.
+Envv is implemented as an HTML preprocessor in node.js, accessible programmatically and through a command-line interface.
+
+## Status and alternatives
+
+Envv is **no longer actively maintained**.
+
+* To manage your front-end dependencies, use [Bower](http://bower.io/) instead.
+* To use CDN libraries but fall back to a local version if necessary, [many techniques are at your disposal](http://www.hanselman.com/blog/CDNsFailButYourScriptsDontHaveToFallbackFromCDNToLocalJQuery.aspx).
+* To disable some functionality during testing, check if `document.location` is localhost.
+
+In most other cases, development-only or production-only code can be managed in your [Grunt](http://gruntjs.com/) or [Gulp](http://gulpjs.com/) build process.
+
+Envv was a pretty cool experiment, but the state of the art in managing front-end code has evolved and I just hardly ever find myself needing it anymore.
 
 ## Example
 
